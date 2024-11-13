@@ -6,7 +6,7 @@ const fs = require('fs');
 const PROTO_PATH = './users.proto';
 
 // Carregamento dos usuários a partir do arquivo JSON
-const users = JSON.parse(fs.readFileSync('users.json'));
+let users = JSON.parse(fs.readFileSync('users.json'));
 
 // Carrega a definição do serviço a partir do arquivo .proto
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
@@ -19,6 +19,11 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 // Carrega o pacote de usuários
 const userProto = grpc.loadPackageDefinition(packageDefinition).users;
+
+// Função para salvar os usuários no arquivo JSON
+function saveUsers() {
+    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+}
 
 // Criação do servidor gRPC
 const server = new grpc.Server();
@@ -41,6 +46,23 @@ server.addService(userProto.UserService.service, {
                 details: "User not found",
             });
         }
+    },
+
+    // Implementação do método CreateUser
+    CreateUser: (call, callback) => {
+        const newUser = {
+            id: users.length > 0 ? users[users.length - 1].id + 1 : 1,
+            name: call.request.name,
+            email: call.request.email,
+        };
+        users.push(newUser);
+        saveUsers();
+        
+        // Exibe uma mensagem de sucesso e retorna o usuário recém-cadastrado
+        callback(null, {
+            message: "Usuário cadastrado com sucesso",
+            user: newUser,
+        });
     },
 });
 

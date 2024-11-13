@@ -18,7 +18,18 @@ message UsersList {
 
 message Empty {} 
 
+message UserRequest {
+    string name = 1;
+    string email = 2;
+}
+
+message UserResponse {
+    string message = 1;
+    User user = 2;
+}
+
 service UserService {
     rpc GetAllUsers (Empty) returns (UsersList);
     rpc GetUserById (UserIdRequest) returns (User);
+    rpc CreateUser (UserRequest) returns (UserResponse);
 }
