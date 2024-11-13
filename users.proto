@@ -2,25 +2,57 @@ syntax = "proto3";
 
 package users;
 
+message Empty {}
+
 message User {
     int32 id = 1;
     string name = 2;
     string email = 3;
+    string cpf = 4;
 }
 
-message UserIdRequest {
+message Service {
     int32 id = 1;
+    int32 userId = 2;
+    string startDate = 3;  // (formato "YYYY-MM-DD")
+    string endDate = 4;    // (formato "YYYY-MM-DD")
+    double price = 5;
+    int32 serviceType = 6;
 }
 
 message UsersList {
     repeated User users = 1;
 }
 
-message Empty {} 
+message ServicesList {
+    repeated Service services = 1;
+}
+
+message ServiceRequest {
+    int32 userId = 1;
+    string startDate = 2;
+    string endDate = 3;
+    double price = 4;
+    int32 serviceType = 5;
+}
+
+message ServiceResponse {
+    string message = 1;
+    Service service = 2;
+}
+
+message ServiceIdRequest {
+    int32 id = 1;
+}
+
+message UserIdRequest {
+    int32 id = 1;
+}
 
 message UserRequest {
     string name = 1;
     string email = 2;
+    string cpf = 3;
 }
 
 message UserResponse {
@@ -32,4 +64,10 @@ service UserService {
     rpc GetAllUsers (Empty) returns (UsersList);
     rpc GetUserById (UserIdRequest) returns (User);
     rpc CreateUser (UserRequest) returns (UserResponse);
+}
+
+service ServiceService {
+    rpc GetAllServices (Empty) returns (ServicesList);
+    rpc GetServiceById (ServiceIdRequest) returns (Service);
+    rpc CreateService (ServiceRequest) returns (ServiceResponse);
 }
