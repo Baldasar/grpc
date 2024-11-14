@@ -18,6 +18,7 @@ message Servico {
     string dataFim = 4;
     double preco = 5;
     int32 tipoServico = 6;
+    int32 status = 7;
 }
 
 message ServicoComDetalhes {
@@ -27,6 +28,7 @@ message ServicoComDetalhes {
     string dataFim = 4;
     double preco = 5;
     string tipoServico = 6;
+    string status = 7;
 }
 
 message UsuariosList {

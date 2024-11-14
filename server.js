@@ -33,7 +33,8 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   oneofs: true,
 });
 // Carrega o pacote
-const servicoManutencaoProto = grpc.loadPackageDefinition(packageDefinition).servico_manutencao;
+const servicoManutencaoProto =
+  grpc.loadPackageDefinition(packageDefinition).servico_manutencao;
 
 // Função para salvar os usuários no arquivo JSON
 function salvarUsuarios() {
@@ -94,6 +95,15 @@ server.addService(servicoManutencaoProto.UsuarioService.service, {
       });
     }
 
+    // Validar se o CPF já está cadastrado
+    const cpfExistente = usuarios.find((u) => u.cpf === call.request.cpf);
+    if (cpfExistente) {
+      return callback({
+        code: grpc.status.ALREADY_EXISTS,
+        details: "CPF já cadastrado",
+      });
+    }
+
     const novoUsuario = {
       id: gerarId(),
       nome: call.request.nome,
@@ -104,7 +114,10 @@ server.addService(servicoManutencaoProto.UsuarioService.service, {
     salvarUsuarios();
     callback(null, {
       message: "Usuário criado com sucesso",
-      usuario: novoUsuario,
+      usuario: {
+        ...novoUsuario,
+        cpf: formatarCpf(novoUsuario.cpf),
+      },
     });
   },
 });
@@ -143,6 +156,16 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
       });
     }
 
+    // Validar se a data de início é anterior à data de fim
+    const dataInicio = new Date(call.request.dataInicio);
+    const dataFim = new Date(call.request.dataFim);
+    if (dataInicio >= dataFim) {
+      return callback({
+        code: grpc.status.INVALID_ARGUMENT,
+        details: "A data de início deve ser anterior à data de fim.",
+      });
+    }
+
     const novoServico = {
       id: gerarId(),
       usuarioId: call.request.usuarioId,
@@ -150,12 +173,22 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
       dataFim: call.request.dataFim,
       preco: call.request.preco,
       tipoServico: call.request.tipoServico,
+      status: 1,
     };
     servicos.push(novoServico);
     salvarServicos();
     callback(null, {
       message: "Serviço criado com sucesso",
-      servico: novoServico,
+      servico: {
+        ...novoServico,
+        nomeUsuario: usuarioExistente.nome,
+        tipoServico:
+          tiposDeServico[novoServico.tipoServico] ||
+          "Tipo de serviço desconhecido",
+        dataInicio: novoServico.dataInicio,
+        dataFim: novoServico.dataFim,
+        status: status[novoServico.status] || "Status desconhecido",
+      },
     });
   },
 
@@ -170,6 +203,7 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
           tiposDeServico[servico.tipoServico] || "Tipo de serviço desconhecido",
         dataInicio: servico.dataInicio,
         dataFim: servico.dataFim,
+        status: status[servico.status] || "Status desconhecido",
       };
     });
     callback(null, { servicos: servicosComDetalhes });
@@ -187,6 +221,7 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
           tiposDeServico[servico.tipoServico] || "Tipo de serviço desconhecido",
         dataInicio: servico.dataInicio,
         dataFim: servico.dataFim,
+        status: status[servico.status] || "Status desconhecido",
       };
       callback(null, servicoComDetalhes);
     } else {
