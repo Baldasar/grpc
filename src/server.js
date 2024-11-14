@@ -20,7 +20,7 @@ const { tiposDeServico, status } = require("./types");
 const PROTO_PATH = `${__dirname}/servico_manutencao.proto`;
 
 // Carregamento dos usuários a partir do arquivo JSON
-const usuarios = JSON.parse(fs.readFileSync(`${__dirname}/data/usuarios.json`));
+let usuarios = JSON.parse(fs.readFileSync(`${__dirname}/data/usuarios.json`));
 
 // Carregamento dos serviços a partir do arquivo JSON
 let servicos = JSON.parse(fs.readFileSync(`${__dirname}/data/servicos.json`));
@@ -33,6 +33,7 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   defaults: true,
   oneofs: true,
 });
+
 // Carrega o pacote
 const servicoManutencaoProto =
   grpc.loadPackageDefinition(packageDefinition).servico_manutencao;
