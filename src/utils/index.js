@@ -81,6 +81,14 @@ function gerarId() {
   return parseInt(result, 10);
 }
 
+// Função para normalizar texto (remover acentos e converter para minúsculas)
+function normalizarTexto(texto) {
+  return texto
+    .normalize("NFD") // Decompõe caracteres acentuados
+    .replace(/[\u0300-\u036f]/g, "") // Remove marcas de diacríticos
+    .toLowerCase(); // Converte para minúsculas
+}
+
 module.exports = {
   formatarData,
   validarEmail,
@@ -89,4 +97,5 @@ module.exports = {
   validarTipoServico,
   formatarCpf,
   gerarId,
+  normalizarTexto
 };
