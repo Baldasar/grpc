@@ -1,0 +1,29 @@
+[
+  {
+    "id": 57289,
+    "usuarioId": 17734,
+    "dataInicio": "14/11/2024",
+    "dataFim": "21/11/2024",
+    "preco": 240,
+    "tipoServico": 4,
+    "status": 0
+  },
+  {
+    "id": 8573,
+    "usuarioId": 60942,
+    "dataInicio": "14/12/2025",
+    "dataFim": "21/12/2025",
+    "preco": 300,
+    "tipoServico": 5,
+    "status": 1
+  },
+  {
+    "id": 38760,
+    "usuarioId": 17734,
+    "dataInicio": "14/12/2025",
+    "dataFim": "15/12/2025",
+    "preco": 300,
+    "tipoServico": 2,
+    "status": 1
+  }
+]

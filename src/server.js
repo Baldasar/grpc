@@ -16,13 +16,13 @@ const {
 const { tiposDeServico, status } = require("./types");
 
 // Caminho para o arquivo .proto
-const PROTO_PATH = "./servico_manutencao.proto";
+const PROTO_PATH = `${__dirname}/servico_manutencao.proto`;
 
 // Carregamento dos usuários a partir do arquivo JSON
-let usuarios = JSON.parse(fs.readFileSync("usuarios.json"));
+const usuarios = JSON.parse(fs.readFileSync(`${__dirname}/data/usuarios.json`));
 
 // Carregamento dos serviços a partir do arquivo JSON
-let servicos = JSON.parse(fs.readFileSync("servicos.json"));
+let servicos = JSON.parse(fs.readFileSync(`${__dirname}/data/servicos.json`));
 
 // Carrega a definição do serviço a partir do arquivo .proto
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
