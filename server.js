@@ -84,6 +84,18 @@ function validarTipoServico(tipo) {
   return tipo >= 1 && tipo <= 5;
 }
 
+// Função para formatar o CPF no formato xxx.xxx.xxx-xx
+function formatarCpf(cpf) {
+  cpf = cpf.replace(/[^\d]+/g, ""); // Remove qualquer coisa que não seja número
+  if (cpf.length === 11) {
+    return cpf.replace(
+      /(\d{3})(\d{3})(\d{3})(\d{2})/,
+      "$1.$2.$3-$4"
+    );
+  }
+  return cpf; // Retorna o CPF sem formatação se não tiver 11 dígitos
+}
+
 // Carrega a definição do serviço a partir do arquivo .proto
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -120,14 +132,23 @@ const server = new grpc.Server();
 
 // Implementação do serviço UsuarioService
 server.addService(usuarioProto.UsuarioService.service, {
+  // Método para consultar todos os usuários
   GetAllUsuarios: (_, callback) => {
-    callback(null, { usuarios });
+    const usuariosComCpfFormatado = usuarios.map((usuario) => ({
+      ...usuario,
+      cpf: formatarCpf(usuario.cpf), // Formata o CPF antes de enviar
+    }));
+    callback(null, { usuarios: usuariosComCpfFormatado });
   },
 
+  // Método para consultar um usuário por ID
   GetUsuarioById: (call, callback) => {
     const usuario = usuarios.find((u) => u.id === call.request.id);
     if (usuario) {
-      callback(null, usuario);
+      callback(null, {
+        ...usuario,
+        cpf: formatarCpf(usuario.cpf), // Formata o CPF antes de enviar
+      });
     } else {
       callback({
         code: grpc.status.NOT_FOUND,
