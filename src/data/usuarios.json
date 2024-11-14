@@ -1,20 +1,20 @@
 [
   {
-    "id": 17734,
-    "nome": "lucas",
-    "email": "lucas@gmail.com",
-    "cpf": "12312332123"
+    "id": 1,
+    "nome": "João Silva",
+    "email": "joao.silva@example.com",
+    "cpf": "12345678901"
   },
   {
-    "id": 60942,
-    "nome": "teste",
-    "email": "teste@gmail.com",
-    "cpf": "07725057994"
+    "id": 2,
+    "nome": "Maria Oliveira",
+    "email": "maria.oliveira@example.com",
+    "cpf": "23456789012"
   },
   {
-    "id": 76813,
-    "nome": "joao",
-    "email": "23@gmail.com",
-    "cpf": "01544173946"
+    "id": 3,
+    "nome": "Pedro Santos",
+    "email": "pedro.santos@example.com",
+    "cpf": "34567890123"
   }
 ]

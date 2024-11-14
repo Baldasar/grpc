@@ -231,6 +231,30 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
       });
     }
   },
+
+  // Implementação do método UpdateServicoStatus
+  UpdateServicoStatus: (call, callback) => {
+    const servico = servicos.find((s) => s.id === call.request.id);
+
+    if (!servico) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Serviço não encontrado",
+      });
+    }
+
+    // Atualiza o status do serviço
+    servico.status = call.request.novoStatus;
+    salvarServicos();
+
+    callback(null, {
+      message: "Status do serviço atualizado com sucesso",
+      servico: {
+        ...servico,
+        status: status[servico.status] || "Status desconhecido",
+      },
+    });
+  },
 });
 
 // Inicializa o servidor na porta 50051
