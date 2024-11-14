@@ -88,10 +88,7 @@ function validarTipoServico(tipo) {
 function formatarCpf(cpf) {
   cpf = cpf.replace(/[^\d]+/g, ""); // Remove qualquer coisa que não seja número
   if (cpf.length === 11) {
-    return cpf.replace(
-      /(\d{3})(\d{3})(\d{3})(\d{2})/,
-      "$1.$2.$3-$4"
-    );
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
   }
   return cpf; // Retorna o CPF sem formatação se não tiver 11 dígitos
 }
@@ -228,8 +225,8 @@ server.addService(usuarioProto.ServicoService.service, {
     const novoServico = {
       id: gerarId(),
       usuarioId: call.request.usuarioId,
-      dataInicio: formatarData(call.request.dataInicio), // Formata a data de início
-      dataFim: formatarData(call.request.dataFim), // Formata a data de fim
+      dataInicio: call.request.dataInicio,
+      dataFim: call.request.dataFim,
       preco: call.request.preco,
       tipoServico: call.request.tipoServico,
     };
@@ -250,8 +247,8 @@ server.addService(usuarioProto.ServicoService.service, {
         nomeUsuario: usuario ? usuario.nome : "Usuário não encontrado",
         tipoServico:
           tiposDeServico[servico.tipoServico] || "Tipo de serviço desconhecido",
-        dataInicio: formatarData(servico.dataInicio), // Formata dataInicio
-        dataFim: formatarData(servico.dataFim), // Formata dataFim
+        dataInicio: servico.dataInicio,
+        dataFim: servico.dataFim,
       };
     });
     callback(null, { servicos: servicosComDetalhes });
@@ -267,8 +264,8 @@ server.addService(usuarioProto.ServicoService.service, {
         nomeUsuario: usuario ? usuario.nome : "Usuário não encontrado",
         tipoServico:
           tiposDeServico[servico.tipoServico] || "Tipo de serviço desconhecido",
-        dataInicio: formatarData(servico.dataInicio),
-        dataFim: formatarData(servico.dataFim),
+        dataInicio: servico.dataInicio,
+        dataFim: servico.dataFim,
       };
       callback(null, servicoComDetalhes);
     } else {
