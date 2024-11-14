@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package usuarios;
+
+message Empty {}
+
+message Usuario {
+    int32 id = 1;
+    string nome = 2;
+    string email = 3;
+    string cpf = 4;
+}
+
+message Servico {
+    int32 id = 1;
+    int32 usuarioId = 2;
+    string dataInicio = 3;
+    string dataFim = 4;
+    double preco = 5;
+    int32 tipoServico = 6;
+}
+
+message ServicoComDetalhes {
+    int32 id = 1;
+    string nomeUsuario = 2;
+    string dataInicio = 3;
+    string dataFim = 4;
+    double preco = 5;
+    string tipoServico = 6;
+}
+
+message UsuariosList {
+    repeated Usuario usuarios = 1;
+}
+
+message ServicosList {
+    repeated ServicoComDetalhes servicos = 1;
+}
+
+message ServicoRequest {
+    int32 usuarioId = 1;
+    string dataInicio = 2;
+    string dataFim = 3;
+    double preco = 4;
+    int32 tipoServico = 5;
+}
+
+message ServicoResponse {
+    string message = 1;
+    Servico servico = 2;
+}
+
+message ServicoIdRequest {
+    int32 id = 1;
+}
+
+message UsuarioIdRequest {
+    int32 id = 1;
+}
+
+message UsuarioRequest {
+    string nome = 1;
+    string email = 2;
+    string cpf = 3;
+}
+
+message UsuarioResponse {
+    string message = 1;
+    Usuario usuario = 2;
+}
+
+service UsuarioService {
+    rpc GetAllUsuarios (Empty) returns (UsuariosList);
+    rpc GetUsuarioById (UsuarioIdRequest) returns (Usuario);
+    rpc CreateUsuario (UsuarioRequest) returns (UsuarioResponse);
+}
+
+service ServicoService {
+    rpc GetAllServicos (Empty) returns (ServicosList);
+    rpc GetServicoById (ServicoIdRequest) returns (ServicoComDetalhes);
+    rpc CreateServico (ServicoRequest) returns (ServicoResponse);
+}
