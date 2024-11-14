@@ -32,9 +32,8 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   defaults: true,
   oneofs: true,
 });
-
-// Carrega o pacote de usuários e serviços
-const usuarioProto = grpc.loadPackageDefinition(packageDefinition).usuarios;
+// Carrega o pacote
+const servicoManutencaoProto = grpc.loadPackageDefinition(packageDefinition).servico_manutencao;
 
 // Função para salvar os usuários no arquivo JSON
 function salvarUsuarios() {
@@ -50,7 +49,7 @@ function salvarServicos() {
 const server = new grpc.Server();
 
 // Implementação do serviço UsuarioService
-server.addService(usuarioProto.UsuarioService.service, {
+server.addService(servicoManutencaoProto.UsuarioService.service, {
   // Método para consultar todos os usuários
   GetAllUsuarios: (_, callback) => {
     const usuariosComCpfFormatado = usuarios.map((usuario) => ({
@@ -111,7 +110,7 @@ server.addService(usuarioProto.UsuarioService.service, {
 });
 
 // Implementação do serviço ServicoService
-server.addService(usuarioProto.ServicoService.service, {
+server.addService(servicoManutencaoProto.ServicoService.service, {
   // Implementação do método CreateServico
   CreateServico: (call, callback) => {
     // Validação do usuário
