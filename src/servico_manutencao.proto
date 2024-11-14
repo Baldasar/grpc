@@ -56,6 +56,10 @@ message ServicoIdRequest {
     int32 id = 1;
 }
 
+message ServicoNomeUsuarioRequest {
+    string nomeUsuario = 1;
+}
+
 message UpdateStatusRequest {
     int32 id = 1;
     int32 novoStatus = 2;
@@ -92,4 +96,5 @@ service ServicoService {
     rpc GetServicoById (ServicoIdRequest) returns (ServicoComDetalhes);
     rpc CreateServico (ServicoRequest) returns (ServicoResponse);
     rpc UpdateServicoStatus (UpdateStatusRequest) returns (UpdateStatusResponse);
+    rpc GetServicosByNomeUsuario (ServicoNomeUsuarioRequest) returns (ServicosList); // Novo método
 }

@@ -10,6 +10,7 @@ const {
   validarTipoServico,
   formatarCpf,
   gerarId,
+  normalizarTexto,
 } = require("./utils");
 
 // Importa os tipos
@@ -230,6 +231,45 @@ server.addService(servicoManutencaoProto.ServicoService.service, {
         details: "Serviço não encontrado",
       });
     }
+  },
+
+  // Implementação do método GetServicosByNomeUsuario
+  GetServicosByNomeUsuario: (call, callback) => {
+    const nomeUsuarioNormalizado = normalizarTexto(call.request.nomeUsuario);
+
+    // Filtra os usuários para encontrar aqueles cujo nome contenha o texto especificado
+    const usuariosFiltrados = usuarios.filter((u) =>
+      normalizarTexto(u.nome).includes(nomeUsuarioNormalizado)
+    );
+
+    if (usuariosFiltrados.length === 0) {
+      return callback({
+        code: grpc.status.NOT_FOUND,
+        details: "Nenhum usuário encontrado",
+      });
+    }
+
+    // Para cada usuário encontrado, busca os serviços correspondentes
+    const servicosUsuario = servicos
+      .filter((servico) =>
+        usuariosFiltrados.some((usuario) => usuario.id === servico.usuarioId)
+      )
+      .map((servico) => {
+        const usuario = usuariosFiltrados.find(
+          (u) => u.id === servico.usuarioId
+        );
+        return {
+          ...servico,
+          nomeUsuario: usuario.nome,
+          tipoServico:
+            tiposDeServico[servico.tipoServico] ||
+            "Tipo de serviço desconhecido",
+          status: status[servico.status] || "Status desconhecido",
+        };
+      });
+
+    // Retorna os serviços encontrados
+    callback(null, { servicos: servicosUsuario });
   },
 
   // Implementação do método UpdateServicoStatus
