@@ -1,0 +1,1 @@
+Projeto desenvolvido como parte da disciplina de Computação Paralela e Distribuída. O objetivo deste trabalho é o desenvolvimento de um servidor Node.js em conjunto com gRPC, utilizando a tecnologia HTTP/2 para realizar as requisições. O tema abordado foi o de uma loja simples que oferece serviços de manutenção de computadores.
